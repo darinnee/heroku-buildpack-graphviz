@@ -25,7 +25,7 @@ GRAPHVIZ_BUILD="$(mktmpdir graphviz)"
 
 mkdir -p $CACHE_DIR/.tools/graphviz
 
-export PATH=/sbin:/usr/sbin:$PATH:
+export PATH=/sbin:/usr/sbin:$PATH:/$BUILD_DIR/bin:
 
 echo "-----> Fetching graphviz"
 cd $GRAPHVIZ_BUILD
