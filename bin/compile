@@ -23,6 +23,11 @@ CACHE_DIR=$2
 
 GRAPHVIZ_BUILD="$(mktmpdir graphviz)"
 
+if [[ -e "$BUILD_DIR/bin/dot" ]]; then
+	echo "Graphviz found; skipping compile..."
+	exit 0
+fi
+
 mkdir -p $CACHE_DIR/.tools/graphviz
 
 export PATH=/sbin:/usr/sbin:$PATH:$BUILD_DIR/bin:
