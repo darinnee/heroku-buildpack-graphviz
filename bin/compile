@@ -29,9 +29,9 @@ export PATH=/sbin:/usr/sbin:$PATH:$BUILD_DIR/bin:
 
 echo "-----> Fetching graphviz"
 cd $GRAPHVIZ_BUILD
-curl -O http://www.graphviz.org/pub/graphviz/stable/SOURCES/graphviz-2.24.0.tar.gz
-tar zxvf graphviz-2.24.0.tar.gz >/dev/null 2>&1
-cd graphviz-2.24.0
+curl -O http://www.graphviz.org/pub/graphviz/stable/SOURCES/graphviz-2.34.0.tar.gz
+tar zxvf graphviz-2.34.0.tar.gz >/dev/null 2>&1
+cd graphviz-2.34.0
 echo "-----> Configuring graphviz"
 ./configure --prefix=$CACHE_DIR/.tools/graphviz --disable-shared --enable-static --without-ltdl-install --without-ltdl
 echo "-----> Compiling graphviz"
