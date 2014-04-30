@@ -3,28 +3,34 @@
 set -e
 
 mktmpdir() {
-  dir=$(mktemp -t fakesu-$1-XXXX)
-  rm -rf $dir
-  mkdir -p $dir
-  echo $dir
-}
-
-function indent() {
-  c='s/^/       /'
-  case $(uname) in
-    Darwin) sed -l "$c";;
-    *)      sed -u "$c";;
-  esac
+	dir=$(mktemp -t fakesu-$1-XXXX)
+	rm -rf $dir
+	mkdir -p $dir
+	echo $dir
 }
 
 BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
 BUILD_DIR=$1
 CACHE_DIR=$2
 
+copy-binaries() {
+	echo "Copying binaries from $CACHE_DIR to $BUILD_DIR..."
+	cd $BUILD_DIR
+	mkdir -p $BUILD_DIR/bin
+	cp $CACHE_DIR/.tools/graphviz/bin/* $BUILD_DIR/bin
+	mv $BUILD_DIR/bin/dot_static $BUILD_DIR/bin/dot
+}
+
 GRAPHVIZ_BUILD="$(mktmpdir graphviz)"
 
 if [[ -e "$BUILD_DIR/bin/dot" ]]; then
-	echo "Graphviz found; skipping compile..."
+	echo "Graphviz installed..."
+	exit 0
+fi
+
+if [[ -e "$CACHE_DIR/.tools/graphviz/bin/dot_static" ]] && "$CACHE_DIR/.tools/graphviz/bin/dot_static" -V 2>&1 | grep 2.34; then
+	echo "Graphviz binary found; skipping compile..."
+	copy-binaries
 	exit 0
 fi
 
@@ -43,11 +49,8 @@ echo "-----> Compiling graphviz"
 make -j5
 echo "-----> Installing graphviz"
 make install
-echo "grapvhiz installed" | indent
+echo "grapvhiz installed"
 
-cd $BUILD_DIR
-mkdir -p $BUILD_DIR/bin
-cp $CACHE_DIR/.tools/graphviz/bin/* $BUILD_DIR/bin
-mv $BUILD_DIR/bin/dot_static $BUILD_DIR/bin/dot
+copy-binaries
 
 exit 0
